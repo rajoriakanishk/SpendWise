@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | SpendWise</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <main class="login-container">
+        <h1>Create your SpendWise account</h1>
+        <p>Register to start tracking your expenses.</p>
+
+        <form id="registerForm">
+            <div>
+                <label for="fullName">Full name</label>
+                <input
+                    type="text"
+                    id="fullName"
+                    name="fullName"
+                    maxlength="100"
+                    required
+                >
+            </div>
+
+            <div>
+                <label for="registerEmail">Email address</label>
+                <input
+                    type="email"
+                    id="registerEmail"
+                    name="email"
+                    maxlength="254"
+                    required
+                >
+            </div>
+
+            <div>
+                <label for="registerPassword">Password</label>
+                <input
+                    type="password"
+                    id="registerPassword"
+                    name="password"
+                    minlength="8"
+                    required
+                >
+                <small>Password must contain at least 8 characters.</small>
+            </div>
+
+            <button type="submit">Create Account</button>
+
+            <p id="registerMessage" role="status"></p>
+        </form>
+
+        <p>Already have an account?
+            <a href="login.html">Sign in</a>
+        </p>
+    </main>
+
+    <script>
+        const registerForm = document.querySelector("#registerForm");
+        const registerMessage = document.querySelector("#registerMessage");
+
+        registerForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            registerMessage.textContent = "Creating your account...";
+
+            const fullName =
+                document.querySelector("#fullName").value.trim();
+            const email =
+                document.querySelector("#registerEmail").value.trim();
+            const password =
+                document.querySelector("#registerPassword").value;
+
+            try {
+                const response = await fetch(
+                    "http://localhost:8080/api/register",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type":
+                                "application/x-www-form-urlencoded"
+                        },
+                        body: new URLSearchParams({
+                            fullName,
+                            email,
+                            password
+                        })
+                    }
+                );
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    registerMessage.textContent =
+                        result.error || "Registration failed.";
+                    return;
+                }
+
+                registerMessage.textContent =
+                    "Account created successfully! Redirecting to sign in...";
+
+                registerForm.reset();
+
+                setTimeout(() => {
+                    window.location.href = "login.html";
+                }, 1500);
+
+            } catch (error) {
+                console.error("Registration error:", error);
+
+                registerMessage.textContent =
+                    "Could not connect to SpendWise. Check that the backend is running.";
+            }
+        });
+    </script>
+
+</body>
+</html>
