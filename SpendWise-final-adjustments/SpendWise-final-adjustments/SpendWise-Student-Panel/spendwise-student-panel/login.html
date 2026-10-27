@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpendWise — Student Login</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main style="max-width: 420px; margin: 80px auto; padding: 24px;">
+    <h1>SpendWise</h1>
+    <h2>Student Login</h2>
+    <p>Login functionality will be connected in the next step.</p>
+
+    <form id="loginForm">
+      <label for="loginEmail">Email</label>
+      <input id="loginEmail" type="email" required
+             autocomplete="username" style="display:block;width:100%;margin:8px 0 16px;">
+
+      <label for="loginPassword">Password</label>
+      <input id="loginPassword" type="password" required
+             autocomplete="current-password" style="display:block;width:100%;margin:8px 0 16px;">
+
+      <button type="submit" class="btn primary">Log In</button>
+      <p id="loginMessage" role="status"></p>
+      <p>Don't have an account? <a href="register.html">Create one</a></p>
+    </form>
+  </main>
+  
+<script>
+  const loginForm = document.querySelector("#loginForm");
+  const loginMessage = document.querySelector("#loginMessage");
+
+  loginForm.addEventListener("submit", async event => {
+    event.preventDefault();
+
+    loginMessage.textContent = "Signing in...";
+
+    const email = document.querySelector("#loginEmail").value.trim();
+    const password = document.querySelector("#loginPassword").value;
+
+    try {
+      const response = await fetch("http://localhost:8080/api/login", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: new URLSearchParams({ email, password })
+      });
+      console.log("Login response status:", response.status);
+      console.log("Login response body:", await response.clone().text());
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        loginMessage.textContent =
+          result.error || "Login failed. Please try again.";
+        return;
+      }
+
+      // Temporary client-side user selection; session security
+      // will be added before this is treated as production-ready.
+      sessionStorage.setItem("spendWiseUser", JSON.stringify(result));
+
+      window.location.href = "index.html";
+
+    } catch (error) {
+      console.error("Login error:", error);
+      loginMessage.textContent =
+        "Could not connect to the server. Please check that it is running.";
+    }
+  });
+</script>
+</body>
+</body>
+</html>

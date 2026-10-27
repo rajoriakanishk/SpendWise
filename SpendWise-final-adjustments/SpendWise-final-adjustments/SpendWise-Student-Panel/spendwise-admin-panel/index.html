@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SpendWise administration dashboard UI prototype">
+  <title>SpendWise | Admin Panel</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#dashboard" id="brandHome" aria-label="SpendWise Admin Dashboard">
+        <span class="brand-mark">◢</span>
+        <span><strong>SpendWise</strong><small>Admin Panel</small></span>
+      </a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <button class="nav-link active" data-page="dashboard"><span>⌂</span>Dashboard</button>
+        <button class="nav-link" data-page="users"><span>♙</span>Users</button>
+        <button class="nav-link" data-page="transactions"><span>▤</span>Transactions</button>
+        <button class="nav-link" data-page="categories"><span>▦</span>Categories</button>
+        <button class="nav-link" data-page="reports"><span>▥</span>Reports</button>
+        <button class="nav-link" data-page="settings"><span>⚙</span>Settings</button>
+      </nav>
+      <button class="logout" id="logoutBtn"><span>⇥</span> Logout</button>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button class="mobile-menu" id="menuBtn" aria-label="Toggle menu">☰</button>
+        <label class="global-search"><span>⌕</span><input id="globalSearch" type="search" placeholder="Search users, transactions..." aria-label="Search users and transactions"></label>
+        <div class="top-actions">
+          <button class="icon-button notification-button" id="notificationBtn" aria-label="Notifications">♧<i></i></button>
+          <button class="profile-chip" id="profileBtn"><span class="avatar">A</span><span><strong>Admin</strong><small>System Administrator</small></span><span>⌄</span></button>
+        </div>
+      </header>
+
+      <div class="page-content">
+        <section class="page-view active" id="page-dashboard">
+          <div class="page-heading"><div><h1>Dashboard</h1><p>Welcome back, Admin! Here's an overview of the SpendWise platform.</p></div><span class="today-label" id="todayLabel"></span></div>
+          <div class="stats-grid">
+            <article class="stat-card"><div class="stat-icon mint">♙</div><div><p>Total Users</p><strong id="totalUsers">—</strong><small class="trend">Live database value</small></div></article>
+            <article class="stat-card"><div class="stat-icon green">▣</div><div><p>Total Transactions</p><strong id="totalTransactions">—</strong><small class="trend">Live database value</small></div></article>
+            <article class="stat-card"><div class="stat-icon aqua">₹</div><div><p>Total Spending</p><strong id="totalSpending">—</strong><small class="trend">Live database value</small></div></article>
+            <article class="stat-card"><div class="stat-icon mint">♧</div><div><p>Total Savings</p><strong>—</strong><small class="trend">Live database value</small></div></article>
+          </div>
+          <div class="dashboard-grid">
+            <article class="panel spending-panel"><div class="panel-heading"><div><h2>Spending Overview</h2><p>Total expenses (last 7 days)</p></div><select id="chartRange" aria-label="Chart range"><option>Last 7 days</option><option>Last 30 days</option></select></div><div class="line-chart-wrap"><div class="y-labels"><span>₹10K</span><span>₹7.5K</span><span>₹5K</span><span>₹2.5K</span><span>₹0</span></div><div class="line-chart"><div class="grid-lines"><i></i><i></i><i></i><i></i><i></i></div><svg id="adminSpendingChart" viewBox="0 0 600 190" preserveAspectRatio="none" role="img" aria-label="Spending line chart"><defs><linearGradient id="areaFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#20a884" stop-opacity=".22"/><stop offset="100%" stop-color="#20a884" stop-opacity=".02"/></linearGradient></defs><path class="chart-area" d="M0 112 L90 96 L180 105 L270 45 L360 104 L450 132 L540 96 L600 116 L600 190 L0 190 Z"/><polyline class="chart-line" points="0,112 90,96 180,105 270,45 360,104 450,132 540,96 600,116"/><g class="chart-dots"><circle cx="0" cy="112" r="4"/><circle cx="90" cy="96" r="4"/><circle cx="180" cy="105" r="4"/><circle cx="270" cy="45" r="4"/><circle cx="360" cy="104" r="4"/><circle cx="450" cy="132" r="4"/><circle cx="540" cy="96" r="4"/><circle cx="600" cy="116" r="4"/></g></svg><div class="x-labels"><span>Oct 10</span><span>Oct 11</span><span>Oct 12</span><span>Oct 13</span><span>Oct 14</span><span>Oct 15</span><span>Oct 16</span></div></div></div></article>
+            <article class="panel category-panel"><div class="panel-heading"><div><h2>Expenses by Category</h2><p>Distribution of recorded spending</p></div></div><div class="donut-layout"><div class="donut" id="adminCategoryDonut"><div><strong id="categoryDonutTotal">—</strong><span>Total Spending</span></div></div><ul class="legend" id="categoryLegend"><li><i class="dot food"></i>Food <span>28%</span></li><li><i class="dot transport"></i>Transport <span>16%</span></li><li><i class="dot education"></i>Education <span>14%</span></li><li><i class="dot entertainment"></i>Entertainment <span>12%</span></li><li><i class="dot shopping"></i>Shopping <span>10%</span></li><li><i class="dot others"></i>Others <span>20%</span></li></ul></div></article>
+            <article class="panel activity-panel"><div class="panel-heading"><div><h2>Recent Activity</h2><p>Latest platform events</p></div><button class="text-button" data-go="transactions">View all</button></div><div class="activity-list" id="activityList"></div></article>
+          </div>
+        </section>
+
+        <section class="page-view" id="page-users">
+          <div class="page-heading"><div><h1>Users Management</h1><p>View and manage registered users.</p></div><button class="primary-button" id="addUserBtn">＋ Add User</button></div>
+          <div class="panel table-panel">
+            <div class="filter-row"><select id="userRoleFilter"><option value="">All Roles</option><option>Student</option><option>Admin</option></select><select id="userStatusFilter"><option value="">All Status</option><option>Active</option><option>Inactive</option></select><label class="table-search">⌕ <input id="userSearch" placeholder="Search by name or email"></label></div>
+            <div class="table-scroll"><table><thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Joined On</th><th>Actions</th></tr></thead><tbody id="usersTable"></tbody></table></div>
+            <div class="table-footer"><span id="usersCount"></span><div class="pagination" id="usersPagination" aria-label="Users pages"></div></div>
+          </div>
+        </section>
+
+        <section class="page-view" id="page-transactions">
+          <div class="page-heading"><div><h1>Transactions</h1><p>Review and manage transaction records.</p></div><button class="primary-button" id="exportBtn">⇩ Export CSV</button></div>
+          <div class="panel table-panel">
+            <div class="filter-row transaction-filters"><select id="transactionUserFilter"><option value="">All Users</option></select><select id="transactionCategoryFilter"><option value="">All Categories</option><option>Food</option><option>Transport</option><option>Education</option><option>Entertainment</option><option>Shopping</option><option>Health</option></select><select id="transactionTypeFilter"><option value="">All Types</option><option>Expense</option></select><label class="date-filter">▦ <input type="date" id="transactionDate"></label></div>
+            <div class="table-scroll"><table><thead><tr><th>ID</th><th>User</th><th>Type</th><th>Category</th><th>Amount</th><th>Date</th><th>Actions</th></tr></thead><tbody id="transactionsTable"></tbody></table></div>
+            <div class="table-footer"><span id="transactionsCount"></span><div class="pagination" id="transactionsPagination" aria-label="Transaction pages"></div></div>
+          </div>
+        </section>
+
+        <section class="page-view" id="page-categories">
+          <div class="page-heading"><div><h1>Categories Management</h1><p>Manage expense categories and their settings.</p></div><button class="primary-button" id="addCategoryBtn">＋ Add Category</button></div>
+          <div class="panel table-panel"><div class="table-scroll"><table><thead><tr><th>Name</th><th>Icon</th><th>Color</th><th>Status</th><th>Actions</th></tr></thead><tbody id="categoriesTable"></tbody></table></div></div>
+        </section>
+
+        <section class="page-view" id="page-reports">
+          <div class="page-heading"><div><h1>Reports &amp; Analytics</h1><p>Detailed insights into spending and user behaviour.</p></div><label class="date-range">▦ <input type="month" id="reportMonth" value="2026-10"></label></div>
+          <div class="report-tabs"><button class="selected" data-report="overview">Overview</button><button data-report="categories">Category Breakdown</button><button data-report="activity">User Activity</button></div>
+          <div class="reports-grid"><article class="panel report-chart"><h2>Monthly Spending Trend</h2><p class="muted">Total recorded expenses</p><div class="bar-chart" id="barChart"><div><span style="height:35%"></span><small>May</small></div><div><span style="height:48%"></span><small>Jun</small></div><div><span style="height:44%"></span><small>Jul</small></div><div><span style="height:63%"></span><small>Aug</small></div><div><span style="height:72%"></span><small>Sep</small></div><div><span style="height:90%"></span><small>Oct</small></div></div></article><article class="panel top-users"><h2>Top Spending Users</h2><p class="muted">Illustrative sample totals</p><div id="topUsersList"></div></article></div>
+        </section>
+
+        <section class="page-view" id="page-settings">
+          <div class="page-heading"><div><h1>Settings</h1><p>Configure application settings and preferences.</p></div></div>
+          <div class="panel settings-panel"><div class="settings-tabs"><button class="selected">General</button><button data-settings-tab="database">Database</button><button data-settings-tab="security">Security</button><button data-settings-tab="notifications">Notifications</button></div>
+            <form id="settingsForm"><h2>Application Settings</h2><label class="form-field">Application Name<input name="appName" value="SpendWise" required></label><label class="form-field">Default Currency<select name="currency"><option>INR (₹)</option><option>USD ($)</option><option>EUR (€)</option></select></label><label class="form-field">Time Zone<select name="timezone"><option>IST (UTC+5:30)</option><option>UTC</option><option>CET (UTC+1)</option></select></label><label class="toggle-field"><span><strong>Email notifications</strong><small>Receive system activity summaries.</small></span><input type="checkbox" name="emailNotifications" checked></label><label class="toggle-field"><span><strong>Maintenance mode</strong><small>Show a maintenance notice to users.</small></span><input type="checkbox" name="maintenance"></label><div class="settings-footer"><span id="settingsMessage" role="status"></span><button class="primary-button" type="submit">Save Changes</button></div></form>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-heading"><h2 id="modalTitle">Add user</h2><button class="icon-button" id="closeModal" aria-label="Close dialog">×</button></div>
+      <form id="modalForm"><div id="modalFields"></div><div class="modal-actions"><button type="button" class="secondary-button" id="cancelModal">Cancel</button><button type="submit" class="primary-button" id="modalSubmit">Save</button></div></form>
+    </section>
+  </div>
+  <div class="confirm-backdrop" id="transactionConfirmBackdrop" hidden>
+    <section class="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="transactionConfirmTitle" aria-describedby="transactionConfirmDescription" tabindex="-1">
+      <div class="confirm-icon" aria-hidden="true">♲</div>
+      <h2 id="transactionConfirmTitle">Delete transaction?</h2>
+      <p id="transactionConfirmDescription">Are you sure you want to delete this transaction from the demo? This action cannot be undone.</p>
+      <div class="confirm-actions">
+        <button type="button" class="secondary-button" id="cancelTransactionDelete">Cancel</button>
+        <button type="button" class="danger-button" id="confirmTransactionDelete">Delete transaction</button>
+      </div>
+    </section>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="js/app.js"></script>
+</body>
+</html>

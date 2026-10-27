@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SpendWise student expense and budget tracker prototype">
+  <title>SpendWise — Student Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#dashboard" data-go="dashboard" aria-label="SpendWise home — go to Dashboard"><span class="brand-mark">↗</span><span><b>SpendWise</b><small>Spend Smart. Build Your Future.</small></span></a>
+      <nav class="nav">
+        <button class="nav-link active" data-page="dashboard"><span>📊</span> Dashboard</button>
+        <button class="nav-link" data-page="add-expense"><span>➕</span> Add Expense</button>
+        <button class="nav-link" data-page="transactions"><span>📥</span> Transactions</button>
+        <button class="nav-link" data-page="categories"><span>📚</span> Categories</button>
+        <button class="nav-link" data-page="budgets"><span>💵</span> Budgets</button>
+        <button class="nav-link" data-page="goals"><span>🎯</span> Savings Goals</button>
+        <button class="nav-link" data-page="reports"><span>📑</span> Reports</button>
+        <button class="nav-link" data-page="profile"><span>👤</span> Profile</button>
+      </nav>
+      <button class="nav-link logout" id="logoutBtn"><span>[←</span> Log Out</button>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
+        <div class="breadcrumb"><span>Student Workspace</span><b id="pageTitle">/ Dashboard</b></div>
+        <div class="top-actions"><button class="icon-btn" id="notificationBtn" aria-label="Notifications">🔔<i></i></button><div class="avatar" id="headerAvatar">RB</div><div class="user-meta"><b>Ronit Bindal</b><small>Student</small></div></div>
+      </header>
+
+      <section class="page active" id="page-dashboard">
+        <div class="welcome-row"><div><p class="eyebrow">STUDENT OVERVIEW</p><h1>Hello, Ronit <span>✦</span></h1><p class="muted">Here's your spending overview for this month.</p></div><button class="btn primary" data-go="add-expense">＋ Add expense</button></div>
+        <div class="stat-grid">
+          <article class="stat-card mint"><div class="stat-head"><span>Total Budget</span><span class="stat-icon">▤</span></div><strong id="dashBudget">₹5,000</strong><small>Monthly allowance</small></article>
+          <article class="stat-card rose"><div class="stat-head"><span>Total Spent</span><span class="stat-icon">↗</span></div><strong id="dashSpent">₹3,720</strong><small id="spentPercent">74.4% of your budget</small></article>
+          <article class="stat-card blue"><div class="stat-head"><span>Remaining</span><span class="stat-icon">◉</span></div><strong id="dashRemaining">₹1,280</strong><small>Keep it up!</small></article>
+          <article class="stat-card lavender"><div class="stat-head"><span>Budget Used</span><span class="stat-icon">◌</span></div><div class="progress-circle"><span id="circlePercent">74%</span></div><small>of monthly budget</small></article>
+        </div>
+        <div class="content-grid">
+          <article class="card chart-card"><div class="card-heading"><div><h2>Spending overview</h2><p class="muted">Your daily expenses this month</p></div><select id="chartRange" aria-label="Chart range"><option>This month</option><option>Last month</option></select></div><div class="chart-wrap"><div class="y-labels"><span>₹1,000</span><span>₹750</span><span>₹500</span><span>₹250</span><span>₹0</span></div><svg id="spendingChart" class="line-chart"
+     viewBox="0 0 620 220"
+     role="img"
+     aria-label="Daily spending trend based on your expenses">
+  <defs>
+    <linearGradient id="areaFill" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0d9b70" stop-opacity=".22"/>
+      <stop offset="100%" stop-color="#0d9b70" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <text x="310" y="110" text-anchor="middle" fill="currentColor">
+    Loading expenses...
+  </text>
+</svg><div class="x-labels"><span>1 Oct</span><span>5 Oct</span><span>10 Oct</span><span>15 Oct</span><span>20 Oct</span><span>25 Oct</span><span>31 Oct</span></div></div></article>
+<article class="card category-chart">
+  <div class="card-heading">
+    <div>
+      <h2>Expense categories</h2>
+      <p class="muted">Where your money goes</p>
+    </div>
+  </div>
+
+  <div class="donut-area">
+    <div class="donut" id="categoryDonut">
+      <div>
+        <b id="categoryTotal">₹0</b>
+        <small>Total spent</small>
+      </div>
+    </div>
+
+    <div class="legend" id="categoryLegend"></div>
+  </div>
+</article>
+        </div>
+        <div class="content-grid lower-grid">
+          <article class="card"><div class="card-heading"><div><h2>Recent transactions</h2><p class="muted">Your latest activity</p></div><button class="text-btn" data-go="transactions">View all →</button></div><div id="recentTransactions" class="recent-list"></div></article>
+          <article class="card tip-card"><div class="tip-icon">✦</div><h2>Smart tip</h2><p>You've used around 74% of your budget. Try setting a small daily limit to stay on track until the end of the month.</p><button class="text-btn" data-go="budgets">Review my budget →</button><div class="plant">♧</div></article>
+        </div>
+      </section>
+
+      <section class="page" id="page-add-expense">
+        <div class="page-intro"><p class="eyebrow">TRACK YOUR DAILY EXPENSES</p><h1>Add expense</h1><p class="muted">Record a purchase to keep your budget up to date.</p></div>
+        <div class="form-layout"><form id="expenseForm" class="card form-card"><label for="expenseAmount">Amount (₹) <em>*</em></label><input id="expenseAmount" type="number" min="0.01" step="0.01" placeholder="e.g. 150" required><label for="expenseCategory">Category <em>*</em></label><select id="expenseCategory" required><option value="">Select a category</option><option>Food</option><option>Transport</option><option>Education</option><option>Entertainment</option><option>Shopping</option><option>Health</option><option>Bills</option><option>Other</option></select><label for="expenseDate">Date <em>*</em></label><input id="expenseDate" type="date" required><label for="expenseDescription">Description (optional)</label><textarea id="expenseDescription" rows="3" placeholder="What did you spend on?"></textarea><button class="btn primary full" type="submit">＋ Save expense</button><p class="form-note">Demo note: entries are stored in this browser session only.</p></form><aside class="card side-note"><div class="side-note-icon">✦</div><h2>Small expenses add up</h2><p class="muted">Logging even a small purchase gives you a clearer picture of your habits.</p><div class="mini-stat"><span>Monthly budget</span><b id="formBudget">₹5,000</b></div><div class="mini-stat"><span>Remaining</span><b id="formRemaining">₹1,280</b></div></aside></div>
+      </section>
+
+      <section class="page" id="page-transactions">
+        <div class="page-intro"><p class="eyebrow">YOUR MONEY, MADE CLEAR</p><h1>Transactions</h1><p class="muted">View and manage all your expenses.</p></div>
+        <article class="card"><div class="toolbar"><input id="transactionSearch" type="search" placeholder="⌕  Search transactions…"><select id="transactionFilter"><option value="All">All categories</option><option>Food</option><option>Transport</option><option>Education</option><option>Entertainment</option><option>Shopping</option><option>Health</option><option>Bills</option><option>Other</option></select><select id="dateFilter"><option value="all">All dates</option><option value="30">Last 30 days</option></select><button class="btn outline" id="exportBtn">↓ Export CSV</button></div><div class="table-wrap"><table><thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Amount</th><th></th></tr></thead><tbody id="transactionsBody"></tbody></table></div><p class="table-foot" id="transactionCount"></p></article>
+      </section>
+
+      <section class="page" id="page-categories">
+        <div class="page-intro"><p class="eyebrow">ORGANISE YOUR SPENDING</p><h1>Expense categories</h1><p class="muted">Understand which areas use most of your budget.</p></div><div class="category-grid" id="categoryGrid"></div>
+      </section>
+
+      <section class="page" id="page-budgets">
+        <div class="welcome-row"><div class="page-intro"><p class="eyebrow">PLAN WITH CONFIDENCE</p><h1>Monthly budgets</h1><p class="muted">Set limits and track how much you have left.</p></div><button class="btn primary" id="editBudgetBtn">＋ Set budget</button></div>
+        <article class="card budget-summary"><div><span class="muted">Total monthly budget</span><h2 id="budgetTotal">₹5,000</h2></div><div><span class="muted">Spent so far</span><h2 id="budgetSpent">₹3,720</h2></div><div><span class="muted">Available</span><h2 class="green-text" id="budgetAvailable">₹1,280</h2></div></article><div class="card"><div class="card-heading"><div><h2>Category limits</h2><p class="muted">Illustrative limits for this prototype</p></div></div><div id="budgetList" class="budget-list"></div></div>
+      </section>
+
+      <section class="page" id="page-goals">
+        <div class="welcome-row"><div class="page-intro"><p class="eyebrow">SAVE FOR SOMETHING GREAT</p><h1>Savings goals</h1><p class="muted">Small steps can help you reach bigger goals.</p></div><button class="btn primary" id="addGoalBtn">＋ Add goal</button></div><div class="goal-grid" id="goalGrid"></div>
+      </section>
+
+      <section class="page" id="page-reports">
+  <div class="page-intro">
+    <p class="eyebrow">YOUR SPENDING PATTERNS</p>
+    <h1>Spending reports</h1>
+    <p class="muted">A simple summary to help you make informed choices.</p>
+  </div>
+
+  <div class="report-grid">
+    <article class="card">
+      <h2>Monthly spending</h2>
+      <p class="muted">Your weekly spending this month</p>
+      <div class="bar-chart" id="reportWeeklyChart">
+        <p class="muted">Loading spending data...</p>
+      </div>
+    </article>
+
+    <article class="card">
+      <h2>Insights</h2>
+
+      <div class="insight">
+        <span>↗</span>
+        <div>
+          <b>Largest category</b>
+          <p class="muted" id="reportLargestCategory">
+            Loading spending data...
+          </p>
+        </div>
+      </div>
+
+      <div class="insight">
+        <span>◎</span>
+        <div>
+          <b>Budget check</b>
+          <p class="muted" id="reportBudgetTip">
+            You have ₹1,280 remaining in your monthly budget.
+          </p>
+        </div>
+      </div>
+
+      <div class="insight">
+        <span>✦</span>
+        <div>
+          <b>Try a small change</b>
+          <p class="muted">
+            Review subscriptions and frequent small purchases.
+          </p>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+      <section class="page" id="page-profile">
+        <div class="page-intro"><p class="eyebrow">YOUR ACCOUNT</p><h1>Profile</h1><p class="muted">Review your student details.</p></div><article class="card profile-card"><div class="profile-avatar" id="profileAvatar">RB</div><div class="profile-main"><h2 id="profileName">Loading profile...</h2><p class="muted"><span id="profileEmail">Loading email...</span> · Student</p></div><span class="role-pill">Student</span><div class="profile-photo-actions"><label class="btn outline upload-label" for="profilePictureInput">↑ Upload profile picture</label><input id="profilePictureInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden><button class="text-btn" id="removeProfilePictureBtn" type="button">Remove picture</button><small>JPG, PNG, WEBP or GIF · up to 5 MB</small></div><hr><div class="profile-details">
+  <div><small>Full name</small><b id="profileFullName">Loading...</b></div>
+  <div><small>Email</small><b id="profileFullEmail">Loading...</b></div></div><div>
+  <small>College</small>
+  <b>Dezyne Ecole College</b>
+</div>
+<div>
+  <small>Account type</small>
+  <b>Student account</b>
+</div><p class="form-note">Profile details are demonstration content. Authentication and account editing are not connected.</p></article>
+      </section>
+      <footer>SpendWise <span>·</span> Student expense tracker prototype <span>·</span> Demo data</footer>
+    </main>
+  </div>
+
+  <dialog id="budgetDialog"><form method="dialog" id="budgetForm" class="dialog-form"><button class="dialog-close" value="cancel" aria-label="Close">×</button><p class="eyebrow">MONTHLY PLANNING</p><h2>Set monthly budget</h2><label for="newBudget">Budget amount (₹)</label><input id="newBudget" type="number" min="1" required value="5000"><div class="dialog-actions"><button class="btn outline" value="cancel">Cancel</button><button class="btn primary" id="saveBudgetBtn" value="default">Save budget</button></div></form></dialog>
+  <dialog id="goalDialog" aria-labelledby="goalDialogTitle"><form id="goalForm" class="dialog-form"><button class="dialog-close" type="button" data-close-dialog="goalDialog" aria-label="Close">×</button><p class="eyebrow">SAVINGS PLAN</p><h2 id="goalDialogTitle">Add a savings goal</h2><label for="goalName">Goal name</label><input id="goalName" required maxlength="70" placeholder="e.g. New headphones"><label for="goalTarget">Target amount (₹)</label><input id="goalTarget" type="number" min="1" step="0.01" required placeholder="e.g. 5000"><label for="goalSaved">Already saved (₹)</label><input id="goalSaved" type="number" min="0" step="0.01" value="0" required><label for="goalDate">Target date <span class="optional-label">(optional)</span></label><input id="goalDate" type="date"><div class="dialog-actions"><button class="btn outline" type="button" data-close-dialog="goalDialog">Cancel</button><button class="btn primary" id="saveGoalBtn" type="submit">Save goal</button></div></form></dialog>
+  <dialog id="savingsDialog" aria-labelledby="savingsDialogTitle"><form id="savingsForm" class="dialog-form"><button class="dialog-close" type="button" data-close-dialog="savingsDialog" aria-label="Close">×</button><p class="eyebrow">KEEP MAKING PROGRESS</p><h2 id="savingsDialogTitle">Add savings</h2><p class="muted" id="savingsGoalContext">Update your savings progress.</p><label for="savingsAmount">How much did you save? (₹)</label><input id="savingsAmount" type="number" min="0.01" step="0.01" required placeholder="e.g. 500"><div class="dialog-actions"><button class="btn outline" type="button" data-close-dialog="savingsDialog">Cancel</button><button class="btn primary" type="submit">Add savings</button></div></form></dialog>
+  <dialog id="deleteGoalDialog" aria-labelledby="deleteGoalTitle"><div class="dialog-form"><button class="dialog-close" type="button" data-close-dialog="deleteGoalDialog" aria-label="Close">×</button><div class="confirm-icon">!</div><p class="eyebrow">SAVINGS PLAN</p><h2 id="deleteGoalTitle">Delete this goal?</h2><p class="muted" id="deleteGoalMessage">This goal will be removed from your savings list.</p><div class="dialog-actions"><button class="btn outline" type="button" data-close-dialog="deleteGoalDialog">Cancel</button><button class="btn danger" type="button" id="confirmDeleteGoalBtn">Delete goal</button></div></div></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="js/app.js"></script>
+</body>
+</html>
